@@ -2,23 +2,36 @@
 <html>
 <head>
 <title>Happy Valentine My Love ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body {
-  background: linear-gradient(to right, #ff9a9e, #fad0c4);
-  font-family: Arial;
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
   text-align: center;
-  padding-top: 100px;
+  background: linear-gradient(to right, #ff758c, #ff7eb3);
   color: white;
 }
-h1 {
-  font-size: 50px;
+
+.container {
+  position: relative;
+  top: 25vh;
+  padding: 20px;
 }
+
+h1 {
+  font-size: 40px;
+}
+
 p {
-  font-size: 20px;
-  width: 60%;
+  font-size: 18px;
+  max-width: 600px;
   margin: auto;
 }
+
 button {
+  margin-top: 30px;
   padding: 15px 30px;
   font-size: 18px;
   border: none;
@@ -27,24 +40,107 @@ button {
   border-radius: 30px;
   cursor: pointer;
 }
+
+#loveMessage {
+  display: none;
+  margin-top: 40px;
+  font-size: 24px;
+  animation: fadeIn 2s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
 </style>
 </head>
 
 <body>
 
-<h1>Happy Valentine ❤️</h1>
+<div class="container">
+  <h1>Happy Valentine ❤️</h1>
 
-<p>
-To the most amazing man in my life.  
-You are my favorite notification, my safest place, and my biggest blessing.  
-I love you more than words can explain.
-</p>
+  <p>
+    To the most amazing man in my life.
+    You are my safest place and my favorite person.
+    I love you endlessly.
+  </p>
 
-<br><br>
+  <button onclick="showLove()">Click Me</button>
 
-<button onclick="alert('You are stuck with me forever 😘')">
-Click Me
-</button>
+  <div id="loveMessage">
+    You are stuck with me forever 😘💍
+  </div>
+</div>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+function showLove() {
+  document.getElementById("loveMessage").style.display = "block";
+  startFireworks();
+}
+
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function createFirework() {
+  let x = Math.random() * canvas.width;
+  let y = Math.random() * canvas.height / 2;
+  
+  for (let i = 0; i < 100; i++) {
+    particles.push({
+      x: x,
+      y: y,
+      radius: 2,
+      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+      speedX: (Math.random() - 0.5) * 6,
+      speedY: (Math.random() - 0.5) * 6,
+      life: 100
+    });
+  }
+}
+
+function startFireworks() {
+  setInterval(createFirework, 800);
+  animate();
+}
+
+function animate() {
+  ctx.fillStyle = "rgba(0,0,0,0.2)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach((p, index) => {
+    p.x += p.speedX;
+    p.y += p.speedY;
+    p.life--;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+
+    if (p.life <= 0) {
+      particles.splice(index, 1);
+    }
+  });
+
+  requestAnimationFrame(animate);
+}
+</script>
 
 </body>
 </html>
+

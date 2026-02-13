@@ -4,14 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Valentine ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-body {
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  text-align: center;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
   background: linear-gradient(to right, #ff758c, #ff7eb3);
   color: white;
+  text-align: center;
   overflow-x: hidden;
 }
 
@@ -20,16 +26,22 @@ body {
   padding: 20px;
 }
 
+h1, p, button, #loveMessage {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+}
+
 h1 {
   font-size: 32px;
+  margin-bottom: 15px;
 }
 
 p {
-  font-size: 16px;
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 
 button {
-  margin-top: 25px;
   padding: 15px 30px;
   font-size: 18px;
   border: none;
@@ -37,13 +49,18 @@ button {
   color: #ff4b5c;
   border-radius: 30px;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
 }
 
 #loveMessage {
   display: none;
   margin-top: 30px;
   font-size: 22px;
-  font-weight: bold;
+  font-weight: 500;
   animation: fadeIn 1.5s ease forwards;
 }
 
@@ -59,6 +76,7 @@ canvas {
   pointer-events: none;
 }
 </style>
+
 </head>
 
 <body>
@@ -74,7 +92,7 @@ canvas {
   <button onclick="showLove()">Click Me</button>
 
   <div id="loveMessage">
-    you stuck with me forever (lots of kisses) 💋
+     you stuck with me forever (lots of kisses) 💋
   </div>
 </div>
 

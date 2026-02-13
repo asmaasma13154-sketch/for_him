@@ -1,59 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Happy Valentine My Love ❤️</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Valentine ❤️</title>
 
 <style>
 body {
   margin: 0;
-  overflow: hidden;
   font-family: Arial, sans-serif;
   text-align: center;
   background: linear-gradient(to right, #ff758c, #ff7eb3);
   color: white;
+  overflow-x: hidden;
 }
 
 .container {
-  position: relative;
-  top: 25vh;
+  margin-top: 30vh;
   padding: 20px;
-  z-index: 2;
 }
 
 h1 {
-  font-size: 42px;
-  margin-bottom: 10px;
+  font-size: 32px;
 }
 
 p {
-  font-size: 18px;
-  max-width: 600px;
-  margin: auto;
+  font-size: 16px;
 }
 
 button {
-  margin-top: 30px;
-  padding: 15px 35px;
+  margin-top: 25px;
+  padding: 15px 30px;
   font-size: 18px;
   border: none;
   background: white;
   color: #ff4b5c;
   border-radius: 30px;
   cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  transform: scale(1.1);
 }
 
 #loveMessage {
   display: none;
-  margin-top: 35px;
-  font-size: 28px;
+  margin-top: 30px;
+  font-size: 22px;
   font-weight: bold;
-  animation: fadeIn 2s ease forwards;
+  animation: fadeIn 1.5s ease forwards;
 }
 
 @keyframes fadeIn {
@@ -66,7 +57,6 @@ canvas {
   top: 0;
   left: 0;
   pointer-events: none;
-  z-index: 1;
 }
 </style>
 </head>
@@ -78,80 +68,84 @@ canvas {
 
   <p>
     To the most amazing man in my life.  
-    You are my safest place, my favorite person,  
-    and my forever.
+    You are my safest place, my favorite person, and my forever.
   </p>
 
   <button onclick="showLove()">Click Me</button>
 
   <div id="loveMessage">
-    Youssef you stuck with me forever xoxo 💋
+    you stuck with me forever (lots of kisses) 💋
   </div>
 </div>
 
 <canvas id="fireworks"></canvas>
 
 <script>
-function showLove() {
-  document.getElementById("loveMessage").style.display = "block";
-  startFireworks();
-}
-
 const canvas = document.getElementById("fireworks");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 let particles = [];
+let animationStarted = false;
+
+function showLove() {
+  document.getElementById("loveMessage").style.display = "block";
+  if (!animationStarted) {
+    animationStarted = true;
+    startFireworks();
+  }
+}
 
 function heartShape(t) {
   return {
     x: 16 * Math.pow(Math.sin(t), 3),
-    y: -(
-      13 * Math.cos(t) -
-      5 * Math.cos(2 * t) -
-      2 * Math.cos(3 * t) -
-      Math.cos(4 * t)
-    )
+    y: -(13 * Math.cos(t) -
+         5 * Math.cos(2 * t) -
+         2 * Math.cos(3 * t) -
+         Math.cos(4 * t))
   };
 }
 
 function createHeartFirework() {
   let centerX = Math.random() * canvas.width;
-  let centerY = Math.random() * canvas.height / 2;
-  let scale = 8;
+  let centerY = Math.random() * (canvas.height / 2);
+  let scale = 6; // smaller for mobile
 
-  for (let t = 0; t < Math.PI * 2; t += 0.2) {
+  for (let t = 0; t < Math.PI * 2; t += 0.3) { // fewer particles (mobile friendly)
     let pos = heartShape(t);
     particles.push({
       x: centerX,
       y: centerY,
       targetX: centerX + pos.x * scale,
       targetY: centerY + pos.y * scale,
-      life: 100,
-      color: "pink"
+      life: 80
     });
   }
 }
 
 function startFireworks() {
-  setInterval(createHeartFirework, 1200);
+  setInterval(createHeartFirework, 1500);
   animate();
 }
 
 function animate() {
-  ctx.fillStyle = "rgba(0,0,0,0.15)";
+  ctx.fillStyle = "rgba(0,0,0,0.1)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach((p, index) => {
-    p.x += (p.targetX - p.x) * 0.05;
-    p.y += (p.targetY - p.y) * 0.05;
+    p.x += (p.targetX - p.x) * 0.07;
+    p.y += (p.targetY - p.y) * 0.07;
     p.life--;
 
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-    ctx.fillStyle = p.color;
+    ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = "pink";
     ctx.fill();
 
     if (p.life <= 0) {

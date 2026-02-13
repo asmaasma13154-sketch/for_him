@@ -14,19 +14,16 @@ body {
     text-align: center;
     color: white;
     overflow: hidden;
+    transition: background 1s ease;
 }
 
 .container {
     margin-top: 15%;
+    transition: opacity 1s ease;
 }
 
 h1 {
     font-size: 3em;
-}
-
-p {
-    font-size: 1.3em;
-    margin: 20px;
 }
 
 button {
@@ -46,11 +43,17 @@ button:hover {
     transform: scale(1.1);
 }
 
-#hiddenMessage {
+/* Final screen */
+#finalMessage {
     display: none;
-    font-size: 1.8em;
-    margin-top: 20px;
-    animation: fadeIn 2s ease-in-out forwards;
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    font-size: 3em;
+    font-weight: bold;
+    color: #ff4da6;
+    text-shadow: 0 0 20px #ff4da6;
+    animation: fadeIn 2s ease forwards;
 }
 
 @keyframes fadeIn {
@@ -58,63 +61,69 @@ button:hover {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Firework particles */
-.firework {
+/* Heart particles */
+.particle {
     position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    animation: explode 1s ease-out forwards;
+    font-size: 20px;
+    animation: explode 2s ease-out forwards;
 }
 
 @keyframes explode {
-    from { opacity: 1; transform: translate(0,0); }
-    to { opacity: 0; transform: translate(var(--x), var(--y)); }
+    from { opacity: 1; transform: translate(0,0) scale(1); }
+    to { opacity: 0; transform: translate(var(--x), var(--y)) scale(1.5); }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="container" id="mainContent">
     <h1>Happy Valentine's Day 💕</h1>
     <p>You are my favorite person in the whole world.</p>
-    <button onclick="celebrate()">Click Me Baby 💌</button>
+    <button onclick="startLove()">Click Me Baby 💌</button>
+</div>
 
-    <p id="hiddenMessage">
-        you stuck with me forever mwah 💋
-    </p>
+<div id="finalMessage">
+    you stuck with me forever 💕
 </div>
 
 <script>
-function celebrate() {
-    document.getElementById("hiddenMessage").style.display = "block";
-    createFireworks();
+function startLove() {
+    // Fade out first screen
+    document.getElementById("mainContent").style.opacity = "0";
+
+    setTimeout(() => {
+        document.body.style.background = "black";
+        document.getElementById("mainContent").style.display = "none";
+        document.getElementById("finalMessage").style.display = "block";
+        launchHearts();
+    }, 1000);
 }
 
-function createFireworks() {
-    for (let i = 0; i < 60; i++) {
-        const particle = document.createElement("div");
-        particle.classList.add("firework");
+function launchHearts() {
+    setInterval(() => {
+        for (let i = 0; i < 20; i++) {
+            const heart = document.createElement("div");
+            heart.classList.add("particle");
+            heart.innerHTML = "💖";
 
-        const x = (Math.random() - 0.5) * 400 + "px";
-        const y = (Math.random() - 0.5) * 400 + "px";
+            const x = (Math.random() - 0.5) * 600 + "px";
+            const y = (Math.random() - 0.5) * 600 + "px";
 
-        particle.style.setProperty("--x", x);
-        particle.style.setProperty("--y", y);
+            heart.style.setProperty("--x", x);
+            heart.style.setProperty("--y", y);
 
-        particle.style.left = window.innerWidth / 2 + "px";
-        particle.style.top = window.innerHeight / 2 + "px";
+            heart.style.left = window.innerWidth / 2 + "px";
+            heart.style.top = window.innerHeight / 2 + "px";
+            heart.style.color = "#ff4da6";
 
-        particle.style.backgroundColor =
-            `hsl(${Math.random() * 360}, 100%, 60%)`;
+            document.body.appendChild(heart);
 
-        document.body.appendChild(particle);
-
-        setTimeout(() => {
-            particle.remove();
-        }, 1000);
-    }
+            setTimeout(() => {
+                heart.remove();
+            }, 2000);
+        }
+    }, 800);
 }
 </script>
 

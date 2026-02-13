@@ -18,10 +18,12 @@ body {
   position: relative;
   top: 25vh;
   padding: 20px;
+  z-index: 2;
 }
 
 h1 {
-  font-size: 40px;
+  font-size: 42px;
+  margin-bottom: 10px;
 }
 
 p {
@@ -32,19 +34,25 @@ p {
 
 button {
   margin-top: 30px;
-  padding: 15px 30px;
+  padding: 15px 35px;
   font-size: 18px;
   border: none;
   background: white;
   color: #ff4b5c;
   border-radius: 30px;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
 }
 
 #loveMessage {
   display: none;
-  margin-top: 40px;
-  font-size: 24px;
+  margin-top: 35px;
+  font-size: 28px;
+  font-weight: bold;
   animation: fadeIn 2s ease forwards;
 }
 
@@ -58,6 +66,7 @@ canvas {
   top: 0;
   left: 0;
   pointer-events: none;
+  z-index: 1;
 }
 </style>
 </head>
@@ -68,15 +77,15 @@ canvas {
   <h1>Happy Valentine ❤️</h1>
 
   <p>
-    To the most amazing man in my life.
-    You are my safest place and my favorite person.
-    I love you endlessly.
+    To the most amazing man in my life.  
+    You are my safest place, my favorite person,  
+    and my forever.
   </p>
 
   <button onclick="showLove()">Click Me</button>
 
   <div id="loveMessage">
-    You are stuck with me forever 😘💍
+    Youssef you stuck with me forever xoxo 💋
   </div>
 </div>
 
@@ -96,39 +105,52 @@ canvas.height = window.innerHeight;
 
 let particles = [];
 
-function createFirework() {
-  let x = Math.random() * canvas.width;
-  let y = Math.random() * canvas.height / 2;
-  
-  for (let i = 0; i < 100; i++) {
+function heartShape(t) {
+  return {
+    x: 16 * Math.pow(Math.sin(t), 3),
+    y: -(
+      13 * Math.cos(t) -
+      5 * Math.cos(2 * t) -
+      2 * Math.cos(3 * t) -
+      Math.cos(4 * t)
+    )
+  };
+}
+
+function createHeartFirework() {
+  let centerX = Math.random() * canvas.width;
+  let centerY = Math.random() * canvas.height / 2;
+  let scale = 8;
+
+  for (let t = 0; t < Math.PI * 2; t += 0.2) {
+    let pos = heartShape(t);
     particles.push({
-      x: x,
-      y: y,
-      radius: 2,
-      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
-      speedX: (Math.random() - 0.5) * 6,
-      speedY: (Math.random() - 0.5) * 6,
-      life: 100
+      x: centerX,
+      y: centerY,
+      targetX: centerX + pos.x * scale,
+      targetY: centerY + pos.y * scale,
+      life: 100,
+      color: "pink"
     });
   }
 }
 
 function startFireworks() {
-  setInterval(createFirework, 800);
+  setInterval(createHeartFirework, 1200);
   animate();
 }
 
 function animate() {
-  ctx.fillStyle = "rgba(0,0,0,0.2)";
+  ctx.fillStyle = "rgba(0,0,0,0.15)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach((p, index) => {
-    p.x += p.speedX;
-    p.y += p.speedY;
+    p.x += (p.targetX - p.x) * 0.05;
+    p.y += (p.targetY - p.y) * 0.05;
     p.life--;
 
     ctx.beginPath();
-    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
     ctx.fillStyle = p.color;
     ctx.fill();
 
@@ -143,4 +165,3 @@ function animate() {
 
 </body>
 </html>
-

@@ -15,103 +15,126 @@
 }
 
 body {
-  background: linear-gradient(to right, #ff758c, #ff7eb3);
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
   color: white;
   text-align: center;
-  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
 }
 
 .container {
-  margin-top: 30vh;
+  position: relative;
+  top: 25vh;
   padding: 20px;
-}
-
-h1, p, button, #loveMessage {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
+  z-index: 2;
 }
 
 h1 {
-  font-size: 32px;
+  font-size: 42px;
   margin-bottom: 15px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
 p {
   font-size: 18px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
 }
 
 button {
-  padding: 15px 30px;
-  font-size: 18px;
+  padding: 15px 40px;
+  font-size: 20px;
   border: none;
   background: white;
   color: #ff4b5c;
-  border-radius: 30px;
+  border-radius: 50px;
   cursor: pointer;
   transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  font-weight: 500;
 }
 
 button:hover {
   transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
 #loveMessage {
   display: none;
   margin-top: 30px;
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 28px;
+  font-weight: bold;
   animation: fadeIn 1.5s ease forwards;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.1);
+  padding: 15px 25px;
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+  display: inline-block;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 canvas {
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 1;
 }
 </style>
-
 </head>
+
 <body>
 
 <div class="container">
   <h1>Happy Valentine ❤️</h1>
 
   <p>
-    To the most amazing man in my life.  
+    To the most amazing man in my life.<br>
     You are my safest place, my favorite person, and my forever.
   </p>
 
-  <button onclick="clickLove()">Click Me</button>
+  <button onclick="showLove()">Click Me</button>
 
   <div id="loveMessage">
-     You stuck with me forever kisses 💋
+    You stuck with me forever kisses 💋
   </div>
 </div>
 
-<canvas id="fireworks"></canvas>
+<canvas id="fireworksCanvas"></canvas>
 
 <script>
-const canvas = document.getElementById("fireworks");
-const ctx = canvas.getContext("2d");
+// Get the canvas element
+const canvas = document.getElementById('fireworksCanvas');
+const ctx = canvas.getContext('2d');
 
+// Set canvas size
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener('resize', resizeCanvas);
 
+// Array to hold particles
 let particles = [];
 
-// Heart shape math function
+// Heart shape formula
 function heartShape(t) {
   return {
     x: 16 * Math.pow(Math.sin(t), 3),
@@ -119,55 +142,78 @@ function heartShape(t) {
   };
 }
 
-// Create heart explosion at click
+// Create heart explosion
 function createHeartExplosion() {
   let centerX = canvas.width / 2;
-  let centerY = canvas.height / 2 - 50; // center higher
-  let scale = 10;
-
-  for (let t = 0; t < Math.PI * 2; t += 0.1) {
+  let centerY = canvas.height / 3;
+  let scale = 12;
+  
+  // Create 200 particles in heart shape
+  for (let i = 0; i < 200; i++) {
+    let t = (i / 200) * Math.PI * 2;
     let pos = heartShape(t);
+    
+    // Add some randomness
+    let randomOffsetX = (Math.random() - 0.5) * 10;
+    let randomOffsetY = (Math.random() - 0.5) * 10;
+    
     particles.push({
       x: centerX,
       y: centerY,
-      targetX: centerX + pos.x * scale,
-      targetY: centerY + pos.y * scale,
+      targetX: centerX + (pos.x * scale) + randomOffsetX,
+      targetY: centerY + (pos.y * scale) + randomOffsetY,
       life: 100,
-      color: `hsl(${Math.random()*360},100%,70%)`
+      color: `hsl(${Math.random() * 60 + 320}, 100%, 65%)`, // Pink/red colors
+      size: Math.random() * 4 + 2
     });
   }
 }
 
-// Animate particles
+// Animation function
 function animate() {
-  ctx.fillStyle = "rgba(0,0,0,0.2)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  particles.forEach((p,index)=>{
-    p.x += (p.targetX - p.x)*0.07;
-    p.y += (p.targetY - p.y)*0.07;
-    p.life--;
-
+  // Clear canvas with transparent background (creates trail effect)
+  ctx.fillStyle = 'rgba(255, 120, 140, 0.1)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Update and draw particles
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    
+    // Move particle
+    p.x += (p.targetX - p.x) * 0.05;
+    p.y += (p.targetY - p.y) * 0.05;
+    p.life -= 1.5;
+    
+    // Draw particle
     ctx.beginPath();
-    ctx.arc(p.x,p.y,3,0,Math.PI*2);
+    ctx.arc(p.x, p.y, p.size * (p.life / 100), 0, Math.PI * 2);
     ctx.fillStyle = p.color;
+    ctx.shadowColor = 'white';
+    ctx.shadowBlur = 10;
     ctx.fill();
-
-    if(p.life<=0) {
-      particles.splice(index,1);
+    
+    // Remove dead particles
+    if (p.life <= 0) {
+      particles.splice(i, 1);
     }
-  });
-
+  }
+  
   requestAnimationFrame(animate);
 }
 
-// Start animation loop once
+// Start animation
 animate();
 
-// Handle click
-function clickLove() {
-  document.getElementById("loveMessage").style.display = "block";
+// Show message and create explosion when button is clicked
+function showLove() {
+  // Show message
+  document.getElementById('loveMessage').style.display = 'inline-block';
+  
+  // Create explosion
   createHeartExplosion();
+  
+  // Create a second explosion after a tiny delay for more effect
+  setTimeout(createHeartExplosion, 100);
 }
 </script>
 

@@ -74,11 +74,11 @@ canvas {
   top: 0;
   left: 0;
   pointer-events: none;
+  z-index: 1;
 }
 </style>
 
 </head>
-
 <body>
 
 <div class="container">
@@ -89,10 +89,10 @@ canvas {
     You are my safest place, my favorite person, and my forever.
   </p>
 
-  <button onclick="showLove()">Click Me</button>
+  <button onclick="clickLove()">Click Me</button>
 
   <div id="loveMessage">
-     you stuck with me forever (lots of kisses) 💋
+     You stuck with me forever kisses 💋
   </div>
 </div>
 
@@ -110,68 +110,64 @@ resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 let particles = [];
-let animationStarted = false;
 
-function showLove() {
-  document.getElementById("loveMessage").style.display = "block";
-  if (!animationStarted) {
-    animationStarted = true;
-    startFireworks();
-  }
-}
-
+// Heart shape math function
 function heartShape(t) {
   return {
     x: 16 * Math.pow(Math.sin(t), 3),
-    y: -(13 * Math.cos(t) -
-         5 * Math.cos(2 * t) -
-         2 * Math.cos(3 * t) -
-         Math.cos(4 * t))
+    y: -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t))
   };
 }
 
-function createHeartFirework() {
-  let centerX = Math.random() * canvas.width;
-  let centerY = Math.random() * (canvas.height / 2);
-  let scale = 6; // smaller for mobile
+// Create heart explosion at click
+function createHeartExplosion() {
+  let centerX = canvas.width / 2;
+  let centerY = canvas.height / 2 - 50; // center higher
+  let scale = 10;
 
-  for (let t = 0; t < Math.PI * 2; t += 0.3) { // fewer particles (mobile friendly)
+  for (let t = 0; t < Math.PI * 2; t += 0.1) {
     let pos = heartShape(t);
     particles.push({
       x: centerX,
       y: centerY,
       targetX: centerX + pos.x * scale,
       targetY: centerY + pos.y * scale,
-      life: 80
+      life: 100,
+      color: `hsl(${Math.random()*360},100%,70%)`
     });
   }
 }
 
-function startFireworks() {
-  setInterval(createHeartFirework, 1500);
-  animate();
-}
-
+// Animate particles
 function animate() {
-  ctx.fillStyle = "rgba(0,0,0,0.1)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgba(0,0,0,0.2)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  particles.forEach((p, index) => {
-    p.x += (p.targetX - p.x) * 0.07;
-    p.y += (p.targetY - p.y) * 0.07;
+  particles.forEach((p,index)=>{
+    p.x += (p.targetX - p.x)*0.07;
+    p.y += (p.targetY - p.y)*0.07;
     p.life--;
 
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-    ctx.fillStyle = "pink";
+    ctx.arc(p.x,p.y,3,0,Math.PI*2);
+    ctx.fillStyle = p.color;
     ctx.fill();
 
-    if (p.life <= 0) {
-      particles.splice(index, 1);
+    if(p.life<=0) {
+      particles.splice(index,1);
     }
   });
 
   requestAnimationFrame(animate);
+}
+
+// Start animation loop once
+animate();
+
+// Handle click
+function clickLove() {
+  document.getElementById("loveMessage").style.display = "block";
+  createHeartExplosion();
 }
 </script>
 

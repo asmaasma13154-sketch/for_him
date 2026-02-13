@@ -2,9 +2,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Happy Valentine ❤️</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -15,76 +15,94 @@
 }
 
 body {
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  color: white;
-  text-align: center;
+  background: linear-gradient(145deg, #ff1a4c 0%, #ff6b8b 50%, #ffb3c6 100%);
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
+  overflow-x: hidden;
 }
 
 .container {
   position: relative;
-  top: 25vh;
+  z-index: 10;
+  text-align: center;
   padding: 20px;
-  z-index: 2;
+  max-width: 90%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 40px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  border: 2px solid rgba(255,255,255,0.3);
+  margin: 20px;
 }
 
 h1 {
-  font-size: 42px;
-  margin-bottom: 15px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  color: white;
+  font-size: clamp(28px, 8vw, 48px);
+  font-weight: 700;
+  text-shadow: 3px 3px 0 #ff4d6d, 5px 5px 0 rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+  letter-spacing: 2px;
 }
 
-p {
-  font-size: 18px;
-  margin-bottom: 25px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+.message {
+  color: white;
+  font-size: clamp(14px, 4vw, 18px);
+  font-weight: 300;
+  margin-bottom: 30px;
   line-height: 1.6;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.3);
 }
 
 button {
-  padding: 15px 40px;
-  font-size: 20px;
-  border: none;
   background: white;
-  color: #ff4b5c;
-  border-radius: 50px;
+  color: #ff4d6d;
+  border: none;
+  padding: 18px 45px;
+  font-size: clamp(18px, 5vw, 24px);
+  font-weight: 700;
+  border-radius: 60px;
   cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(255, 75, 100, 0.4);
+  border: 3px solid white;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
-button:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+button:active {
+  transform: scale(0.95);
+  box-shadow: 0 5px 15px rgba(255, 75, 100, 0.6);
 }
 
 #loveMessage {
   display: none;
-  margin-top: 30px;
-  font-size: 28px;
-  font-weight: bold;
-  animation: fadeIn 1.5s ease forwards;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-  background: rgba(255,255,255,0.1);
-  padding: 15px 25px;
+  color: white;
+  font-size: clamp(20px, 6vw, 32px);
+  font-weight: 700;
+  text-shadow: 2px 2px 0 #ff4d6d, 4px 4px 0 rgba(0,0,0,0.2);
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255,255,255,0.15);
   border-radius: 50px;
   backdrop-filter: blur(5px);
-  display: inline-block;
+  border: 2px solid white;
+  transform: scale(0);
+  animation: popIn 0.5s ease forwards;
 }
 
-@keyframes fadeIn {
-  from { 
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to { 
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 canvas {
@@ -94,36 +112,63 @@ canvas {
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 5;
+}
+
+/* Floating hearts background */
+.floating-hearts {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
   z-index: 1;
+}
+
+.heart {
+  position: absolute;
+  font-size: 20px;
+  color: rgba(255,255,255,0.3);
+  animation: float 6s linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
 }
 </style>
 </head>
-
 <body>
+
+<!-- Floating hearts background -->
+<div class="floating-hearts" id="floatingHearts"></div>
 
 <div class="container">
   <h1>Happy Valentine ❤️</h1>
-
-  <p>
+  
+  <div class="message">
     To the most amazing man in my life.<br>
-    You are my safest place, my favorite person, and my forever.
-  </p>
-
+    You are my safest place, my favorite person,<br>
+    and my forever.
+  </div>
+  
   <button onclick="showLove()">Click Me</button>
-
+  
   <div id="loveMessage">
-    You stuck with me forever kisses 💋
+    you stuck with me forever kisses 💋
   </div>
 </div>
 
 <canvas id="fireworksCanvas"></canvas>
 
 <script>
-// Get the canvas element
+// Canvas setup
 const canvas = document.getElementById('fireworksCanvas');
 const ctx = canvas.getContext('2d');
 
-// Set canvas size
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -131,7 +176,7 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-// Array to hold particles
+// Firework particles array
 let particles = [];
 
 // Heart shape formula
@@ -142,37 +187,45 @@ function heartShape(t) {
   };
 }
 
-// Create heart explosion
-function createHeartExplosion() {
-  let centerX = canvas.width / 2;
-  let centerY = canvas.height / 3;
-  let scale = 12;
+// Create multiple fireworks at different positions
+function createMultipleFireworks() {
+  const numFireworks = 8; // Number of fireworks
   
-  // Create 200 particles in heart shape
-  for (let i = 0; i < 200; i++) {
-    let t = (i / 200) * Math.PI * 2;
-    let pos = heartShape(t);
+  for (let f = 0; f < numFireworks; f++) {
+    // Random positions on screen
+    let centerX = Math.random() * canvas.width;
+    let centerY = Math.random() * canvas.height * 0.7; // Keep in top 70%
+    let scale = Math.random() * 8 + 8; // Random size between 8-16
     
-    // Add some randomness
-    let randomOffsetX = (Math.random() - 0.5) * 10;
-    let randomOffsetY = (Math.random() - 0.5) * 10;
+    // Random color for this firework
+    let hue = Math.random() * 60 + 320; // Pink/red range
     
-    particles.push({
-      x: centerX,
-      y: centerY,
-      targetX: centerX + (pos.x * scale) + randomOffsetX,
-      targetY: centerY + (pos.y * scale) + randomOffsetY,
-      life: 100,
-      color: `hsl(${Math.random() * 60 + 320}, 100%, 65%)`, // Pink/red colors
-      size: Math.random() * 4 + 2
-    });
+    // Create particles for this firework
+    for (let i = 0; i < 30; i++) {
+      let t = (i / 30) * Math.PI * 2;
+      let pos = heartShape(t);
+      
+      // Add randomness
+      let randomOffsetX = (Math.random() - 0.5) * 15;
+      let randomOffsetY = (Math.random() - 0.5) * 15;
+      
+      particles.push({
+        x: centerX,
+        y: centerY,
+        targetX: centerX + (pos.x * scale) + randomOffsetX,
+        targetY: centerY + (pos.y * scale) + randomOffsetY,
+        life: 100 + Math.random() * 50,
+        color: `hsl(${hue + Math.random()*20}, 100%, 65%)`,
+        size: Math.random() * 5 + 2
+      });
+    }
   }
 }
 
-// Animation function
+// Animation loop
 function animate() {
-  // Clear canvas with transparent background (creates trail effect)
-  ctx.fillStyle = 'rgba(255, 120, 140, 0.1)';
+  // Clear canvas with fade effect
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   
   // Update and draw particles
@@ -180,8 +233,8 @@ function animate() {
     let p = particles[i];
     
     // Move particle
-    p.x += (p.targetX - p.x) * 0.05;
-    p.y += (p.targetY - p.y) * 0.05;
+    p.x += (p.targetX - p.x) * 0.04;
+    p.y += (p.targetY - p.y) * 0.04;
     p.life -= 1.5;
     
     // Draw particle
@@ -189,7 +242,13 @@ function animate() {
     ctx.arc(p.x, p.y, p.size * (p.life / 100), 0, Math.PI * 2);
     ctx.fillStyle = p.color;
     ctx.shadowColor = 'white';
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 15;
+    ctx.fill();
+    
+    // Draw trail
+    ctx.beginPath();
+    ctx.arc(p.x - (p.targetX - p.x)*0.1, p.y - (p.targetY - p.y)*0.1, p.size * 0.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
     ctx.fill();
     
     // Remove dead particles
@@ -201,19 +260,66 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-// Start animation
-animate();
+// Create floating hearts background
+function createFloatingHearts() {
+  const container = document.getElementById('floatingHearts');
+  for (let i = 0; i < 15; i++) {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerHTML = '❤️';
+    heart.style.left = Math.random() * 100 + '%';
+    heart.style.animationDelay = Math.random() * 5 + 's';
+    heart.style.fontSize = (Math.random() * 30 + 15) + 'px';
+    heart.style.opacity = Math.random() * 0.3 + 0.2;
+    container.appendChild(heart);
+  }
+}
 
-// Show message and create explosion when button is clicked
+// Start animation and floating hearts
+animate();
+createFloatingHearts();
+
+// Show love when button is clicked
 function showLove() {
-  // Show message
-  document.getElementById('loveMessage').style.display = 'inline-block';
+  // Show the message with animation
+  const message = document.getElementById('loveMessage');
+  message.style.display = 'block';
   
-  // Create explosion
-  createHeartExplosion();
+  // Create multiple fireworks
+  createMultipleFireworks();
   
-  // Create a second explosion after a tiny delay for more effect
-  setTimeout(createHeartExplosion, 100);
+  // Create more fireworks after delays
+  setTimeout(() => {
+    createMultipleFireworks();
+  }, 200);
+  
+  setTimeout(() => {
+    createMultipleFireworks();
+  }, 400);
+  
+  // Create a big final explosion
+  setTimeout(() => {
+    createMultipleFireworks();
+    createMultipleFireworks();
+  }, 600);
+  
+  // Vibrate if mobile (optional, works on some devices)
+  if (window.navigator && window.navigator.vibrate) {
+    window.navigator.vibrate([50, 50, 50]);
+  }
+  
+  // Add sparkle effect to button
+  event.target.style.transform = 'scale(0.9)';
+  setTimeout(() => {
+    event.target.style.transform = 'scale(1)';
+  }, 200);
+}
+
+// Create some initial floating hearts
+for (let i = 0; i < 10; i++) {
+  setTimeout(() => {
+    createMultipleFireworks();
+  }, i * 1000);
 }
 </script>
 
